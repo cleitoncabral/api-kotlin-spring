@@ -6,6 +6,8 @@ import com.study.dto.UpdateTopicForm
 import com.study.service.TopicService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,8 +19,8 @@ import org.springframework.web.util.UriComponentsBuilder
 class TopicController (private val service: TopicService) {
 
     @GetMapping
-    fun list(): List<TopicView> {
-        return service.list()
+    fun list(@RequestParam(required = false) curseName: String?, pagination: Pageable): Page<TopicView> {
+        return service.list(curseName, pagination)
     }
 
     @GetMapping("/{id}")

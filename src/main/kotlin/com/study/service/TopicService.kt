@@ -7,6 +7,8 @@ import com.study.exception.NotFoundException
 import com.study.mapper.TopicFormMapper
 import com.study.mapper.TopicViewMapper
 import com.study.repository.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
@@ -18,8 +20,10 @@ class TopicService (
     private val notFoundMessage: String = "Não encontrado"
 ) {
 
-    fun list(): List<TopicView> {
-        return repository.findAll().stream().map { t -> topicViewMapper.map(t)}.collect(Collectors.toList())
+    fun list(curseName: String?, pagination: Pageable): Page<TopicView> {
+        if (curseName == null) return repository.findAll(pagination).map { t -> topicViewMapper.map(t)}
+
+        return repository.findByCurseName(curseName, pagination).map { t -> topicViewMapper.map(t)}
     }
 
     fun getTopicById(id: Long): TopicView {
